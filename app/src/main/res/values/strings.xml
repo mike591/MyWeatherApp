@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyWeatherApp</string>
+    <string name="location">Location</string>
+    <string name="weather">Weather</string>
+    <string name="highTemp">Highs</string>
+    <string name="lowTemp">Lows</string>
+</resources>
