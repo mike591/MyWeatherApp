@@ -1,5 +1,7 @@
 package mmach.android.myweatherapp;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Mike on 3/20/2016.
  */
@@ -8,6 +10,16 @@ public class WeatherItem {
     private String highTemperature;
     private String lowTemperature;
     private String location;
+    private String imgURL;
+    private Bitmap weatherIcon;
+
+    public Bitmap getWeatherIcon() {
+        return weatherIcon;
+    }
+
+    public void setWeatherIcon(Bitmap weatherIcon) {
+        this.weatherIcon = weatherIcon;
+    }
 
     public String getWeather() {
         return weather;
@@ -39,5 +51,13 @@ public class WeatherItem {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
     }
 }

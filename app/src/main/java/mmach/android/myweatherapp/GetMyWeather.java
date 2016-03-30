@@ -10,9 +10,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -26,7 +24,14 @@ public class GetMyWeather {
     private static final String COUNTRY = "USA";
     private static final String FAHRENHEIT = "imperial";
 
-    public static final Uri ENDPOINT = Uri.parse("http://api.openweathermap.org/data/2.5/weather")
+    public static final Uri WEATHER_ENDPOINT = Uri.parse("http://api.openweathermap.org/data/2.5/weather")
+            .buildUpon()
+            .appendQueryParameter("q", CITY + ',' + COUNTRY)
+            .appendQueryParameter("APPID", API_KEY)
+            .appendQueryParameter("units", FAHRENHEIT)
+            .build();
+
+    public static final Uri FORECAST_ENDPOINT = Uri.parse("http://api.openweathermap.org/data/2.5/forecast")
             .buildUpon()
             .appendQueryParameter("q", CITY + ',' + COUNTRY)
             .appendQueryParameter("APPID", API_KEY)
@@ -38,10 +43,11 @@ public class GetMyWeather {
         Log.i(TAG, "Now using generateWeatherData");
 
         try {
-            JSONObject jBody = new JSONObject(convertDataToString());
+            JSONObject jBody = new JSONObject(convertWeatherDataToString());
 
+            //Sometimes there may be a 2nd weather, for now stick with the first weather that appears
             JSONArray jWeathers = jBody.getJSONArray("weather");
-            JSONObject jWeather = jWeathers.getJSONObject(1);
+            JSONObject jWeather = jWeathers.getJSONObject(0);
 
             JSONObject jDetail = jBody.getJSONObject("main");
 
@@ -58,6 +64,11 @@ public class GetMyWeather {
 
             Log.i(TAG, "The Low Temp: " + jDetail.getString("temp_min"));
             weatherItem.setLowTemperature(jDetail.getString("temp_min"));
+
+            String weatherIconURL = generateImageURL(jWeather.getString("icon"));
+            Log.i(TAG, "The icon is: " + weatherIconURL);
+            weatherItem.setImgURL(weatherIconURL);
+
         } catch (IOException ioe) {
             Log.d(TAG, "generateWeatherData: " + ioe);
         } catch (JSONException j) {
@@ -67,10 +78,10 @@ public class GetMyWeather {
         return weatherItem;
     }
 
-    public static byte[] connectAndGetData() throws IOException {
-        URL url = new URL(ENDPOINT.toString());
+    public static byte[] connectAndGetWeatherData() throws IOException {
+        URL url = new URL(WEATHER_ENDPOINT.toString());
         HttpURLConnection hcon = (HttpURLConnection) url.openConnection();
-        Log.i(TAG, "Connection to " + ENDPOINT);
+        Log.i(TAG, "Connection to " + WEATHER_ENDPOINT);
 
         try {
             InputStream in = hcon.getInputStream();
@@ -87,8 +98,21 @@ public class GetMyWeather {
         }
     }
 
-    public static String convertDataToString() throws IOException {
-        return new String(connectAndGetData());
+    public static byte[] connectAndGetForecastDate() throws IOException {
+        //fix this later
+        return null;
+    }
+
+    public static String convertWeatherDataToString() throws IOException {
+        return new String(connectAndGetWeatherData());
+    }
+
+    public static String convertForecastDataToString() throws IOException {
+        return new String(connectAndGetForecastDate());
+    }
+
+    public static String generateImageURL(String imageCode) {
+        return "http://openweathermap.org/img/w/" + imageCode + ".png";
     }
 
 }

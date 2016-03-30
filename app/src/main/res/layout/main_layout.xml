@@ -5,10 +5,19 @@
               android:layout_height="match_parent">
 
     <fragment
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:name="mmach.android.myweatherapp.WeatherFragment"
-        android:id="@+id/weatherFragment"/>
+        android:id="@+id/weatherFragment"
+        android:layout_weight="1"/>
+
+    <fragment
+        android:layout_gravity="bottom|center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="mmach.android.myweatherapp.ForecastFragment"
+        android:id="@+id/forecastFragment"
+        android:layout_weight="2"/>
 
 </LinearLayout>

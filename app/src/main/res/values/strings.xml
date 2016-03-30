@@ -4,4 +4,5 @@
     <string name="weather">Weather</string>
     <string name="highTemp">Highs</string>
     <string name="lowTemp">Lows</string>
+    <string name="refreshIcon">Refresh</string>
 </resources>
