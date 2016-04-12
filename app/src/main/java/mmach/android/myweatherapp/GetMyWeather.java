@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Mike on 3/20/2016.
@@ -31,7 +32,7 @@ public class GetMyWeather {
             .appendQueryParameter("units", FAHRENHEIT)
             .build();
 
-    public static final Uri FORECAST_ENDPOINT = Uri.parse("http://api.openweathermap.org/data/2.5/forecast")
+    public static final Uri FORECAST_ENDPOINT = Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily")
             .buildUpon()
             .appendQueryParameter("q", CITY + ',' + COUNTRY)
             .appendQueryParameter("APPID", API_KEY)
@@ -43,7 +44,7 @@ public class GetMyWeather {
         Log.i(TAG, "Now using generateWeatherData");
 
         try {
-            JSONObject jBody = new JSONObject(convertWeatherDataToString());
+            JSONObject jBody = new JSONObject(convertDataToString(WEATHER_ENDPOINT.toString()));
 
             //Sometimes there may be a 2nd weather, for now stick with the first weather that appears
             JSONArray jWeathers = jBody.getJSONArray("weather");
@@ -78,10 +79,59 @@ public class GetMyWeather {
         return weatherItem;
     }
 
-    public static byte[] connectAndGetWeatherData() throws IOException {
-        URL url = new URL(WEATHER_ENDPOINT.toString());
+    public static ArrayList<WeatherItem> generateForcastData() {
+        ArrayList<WeatherItem> weatherItems = new ArrayList<WeatherItem>();
+        try {
+            JSONObject jObject = new JSONObject(convertDataToString(FORECAST_ENDPOINT.toString()));
+            JSONArray jForcastArray = jObject.getJSONArray("list");
+
+            WeatherItem tempWeatherItem = new WeatherItem();
+            weatherItems.add(tempWeatherItem);
+            weatherItems.add(tempWeatherItem);
+            weatherItems.add(tempWeatherItem);
+
+            weatherItems.get(0).setImgURL(generateImageURL(
+                    jForcastArray
+                    .getJSONObject(0)
+                    .getJSONArray("weather")
+                    .getJSONObject(0)
+                    .getString("icon")));
+            Log.i(TAG, "generateForcastData: " + weatherItems.get(0).getImgURL());
+
+            weatherItems.get(1).setImgURL(generateImageURL(
+                    jForcastArray
+                    .getJSONObject(1)
+                    .getJSONArray("weather")
+                    .getJSONObject(0)
+                    .getString("icon")));
+            Log.i(TAG, "generateForcastData: " + weatherItems.get(1).getImgURL());
+
+            weatherItems.get(2).setImgURL(generateImageURL(
+                    jForcastArray
+                    .getJSONObject(2)
+                    .getJSONArray("weather")
+                    .getJSONObject(0)
+                    .getString("icon")));
+            Log.i(TAG, "generateForcastData: " + weatherItems.get(2).getImgURL());
+
+
+            Log.i(TAG, "generateForcastData 2: " + weatherItems.get(0).getImgURL());
+            Log.i(TAG, "generateForcastData 2: " + weatherItems.get(1).getImgURL());
+            Log.i(TAG, "generateForcastData 2: " + weatherItems.get(2).getImgURL());
+
+        } catch (IOException e) {
+            Log.d(TAG, "generateWeatherData: " + e);
+        } catch (JSONException e) {
+            Log.d(TAG, "generateWeatherData: " + e);
+        }
+
+        return weatherItems;
+    }
+
+    public static byte[] connectAndGetWeatherData(String endpoint) throws IOException {
+        URL url = new URL(endpoint);
         HttpURLConnection hcon = (HttpURLConnection) url.openConnection();
-        Log.i(TAG, "Connection to " + WEATHER_ENDPOINT);
+        Log.i(TAG, "Connection to " + endpoint);
 
         try {
             InputStream in = hcon.getInputStream();
@@ -98,18 +148,11 @@ public class GetMyWeather {
         }
     }
 
-    public static byte[] connectAndGetForecastDate() throws IOException {
-        //fix this later
-        return null;
+
+    public static String convertDataToString(String endpoint) throws IOException {
+        return new String(connectAndGetWeatherData(endpoint));
     }
 
-    public static String convertWeatherDataToString() throws IOException {
-        return new String(connectAndGetWeatherData());
-    }
-
-    public static String convertForecastDataToString() throws IOException {
-        return new String(connectAndGetForecastDate());
-    }
 
     public static String generateImageURL(String imageCode) {
         return "http://openweathermap.org/img/w/" + imageCode + ".png";

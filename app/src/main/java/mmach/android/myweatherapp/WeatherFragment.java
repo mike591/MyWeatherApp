@@ -43,7 +43,6 @@ public class WeatherFragment extends Fragment {
         setHasOptionsMenu(true);
 
         new GenerateWeatherData().execute();
-        new DownloadWeatherImage().execute();
     }
 
     @Nullable
@@ -69,7 +68,6 @@ public class WeatherFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.refresh_button:
                 new GenerateWeatherData().execute();
-                new DownloadWeatherImage().execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -96,6 +94,7 @@ public class WeatherFragment extends Fragment {
         protected void onPostExecute(WeatherItem weatherItem) {
             mWeatherItem = weatherItem;
             updateWeather();
+            new DownloadWeatherImage().execute();
         }
     }
 
