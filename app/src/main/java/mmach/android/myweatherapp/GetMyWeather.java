@@ -85,33 +85,34 @@ public class GetMyWeather {
             JSONObject jObject = new JSONObject(convertDataToString(FORECAST_ENDPOINT.toString()));
             JSONArray jForcastArray = jObject.getJSONArray("list");
 
-            WeatherItem tempWeatherItem = new WeatherItem();
-            weatherItems.add(tempWeatherItem);
-            weatherItems.add(tempWeatherItem);
-            weatherItems.add(tempWeatherItem);
-
-            weatherItems.get(0).setImgURL(generateImageURL(
+            WeatherItem tWeatherItem0 = new WeatherItem();
+            tWeatherItem0.setImgURL(generateImageURL(
                     jForcastArray
-                    .getJSONObject(0)
-                    .getJSONArray("weather")
-                    .getJSONObject(0)
-                    .getString("icon")));
+                            .getJSONObject(0)
+                            .getJSONArray("weather")
+                            .getJSONObject(0)
+                            .getString("icon")));
+            weatherItems.add(tWeatherItem0);
             Log.i(TAG, "generateForcastData: " + weatherItems.get(0).getImgURL());
 
-            weatherItems.get(1).setImgURL(generateImageURL(
+            WeatherItem tWeatherItem1 = new WeatherItem();
+            tWeatherItem1.setImgURL(generateImageURL(
                     jForcastArray
-                    .getJSONObject(1)
-                    .getJSONArray("weather")
-                    .getJSONObject(0)
-                    .getString("icon")));
+                            .getJSONObject(1)
+                            .getJSONArray("weather")
+                            .getJSONObject(0)
+                            .getString("icon")));
+            weatherItems.add(tWeatherItem1);
             Log.i(TAG, "generateForcastData: " + weatherItems.get(1).getImgURL());
 
-            weatherItems.get(2).setImgURL(generateImageURL(
+            WeatherItem tWeatherItem2 = new WeatherItem();
+            tWeatherItem2.setImgURL(generateImageURL(
                     jForcastArray
-                    .getJSONObject(2)
-                    .getJSONArray("weather")
-                    .getJSONObject(0)
-                    .getString("icon")));
+                            .getJSONObject(2)
+                            .getJSONArray("weather")
+                            .getJSONObject(0)
+                            .getString("icon")));
+            weatherItems.add(tWeatherItem2);
             Log.i(TAG, "generateForcastData: " + weatherItems.get(2).getImgURL());
 
 

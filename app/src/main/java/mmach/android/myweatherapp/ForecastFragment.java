@@ -44,8 +44,12 @@ public class ForecastFragment extends Fragment {
         mImageView2 = (ImageView) v.findViewById(R.id.forecast_2);
         mImageView3 = (ImageView) v.findViewById(R.id.forecast_3);
 
-        new generateForcastData().execute();
+        refresh();
         return v;
+    }
+
+    public void refresh() {
+        new generateForcastData().execute();
     }
 
     public void updateForcastImages() {
@@ -117,5 +121,4 @@ public class ForecastFragment extends Fragment {
             updateForcastImages();
         }
     }
-
 }
